@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<title>Harca + Yatırım</title>
+<style>
+:root{--bg:#080c17;--card:#101728;--card2:#151d31;--line:#222c43;--text:#f5f7fb;--muted:#8f9bb2;--green:#36d399;--red:#ff6577;--blue:#5ea0ff;--gold:#f4c95d}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(circle at 50% -10%,#172444 0,#080c17 38%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100vh}
+.app{width:min(760px,100%);margin:auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(105px + env(safe-area-inset-bottom))}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{font-size:27px;font-weight:900;letter-spacing:-1px}.brand span{color:var(--green)}.month{background:var(--card);border:1px solid var(--line);padding:9px 12px;border-radius:14px;color:var(--muted);font-weight:800}
+.hero{background:linear-gradient(145deg,#172440,#0e1628 65%);border:1px solid #263554;border-radius:26px;padding:22px;box-shadow:0 18px 50px #0004;margin-bottom:12px}.kicker{font-size:12px;color:#9eabc1;font-weight:900;letter-spacing:1px}.balance{font-size:39px;font-weight:950;letter-spacing:-1.7px;margin:5px 0 18px}.heroGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini{background:#0b1221aa;border:1px solid #26334e;border-radius:17px;padding:13px}
+.label{font-size:11px;color:var(--muted);font-weight:850;letter-spacing:.2px}.value{font-size:18px;font-weight:900;margin-top:4px}.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}.gold{color:var(--gold)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.card{background:rgba(16,23,40,.94);border:1px solid var(--line);border-radius:22px;padding:17px;margin-bottom:12px}.cardTitle{font-size:16px;font-weight:950;margin-bottom:13px;display:flex;justify-content:space-between;align-items:center}.sectionHint{font-size:11px;color:var(--muted);font-weight:700}.statBig{font-size:25px;font-weight:950;letter-spacing:-.7px}
+.progress{height:8px;background:#202a40;border-radius:99px;overflow:hidden;margin-top:10px}.bar{height:100%;border-radius:99px}.row{display:flex;gap:9px}.row>*{min-width:0;flex:1}
+input,select{width:100%;background:#0b1220;color:var(--text);border:1px solid #29354d;border-radius:14px;padding:13px 12px;outline:none}input:focus,select:focus{border-color:#4b72ad}input[type=date]{appearance:none;-webkit-appearance:none;text-align:center;text-align-last:center;color-scheme:dark}
+.btn{width:100%;padding:13px 14px;border-radius:14px;font-weight:950;margin-top:9px}.btnGreen{background:var(--green);color:#06130e}.btnBlue{background:var(--blue);color:#07111f}.btnGhost{background:#1a2336;color:#dce4f2}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}.cat{min-height:45px;padding:8px 5px;background:#151e31;color:#cbd4e4;border:1px solid #253047;border-radius:13px;font-size:12px;font-weight:850}.cat.active{border-color:#5b79a9;background:#20304b;color:#fff}
+.list{display:flex;flex-direction:column}.item{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #202a3d}.item:last-child{border-bottom:0}.itemMain{min-width:0}.itemTitle{font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.itemSub{font-size:11px;color:var(--muted);margin-top:4px}.itemRight{text-align:right;flex:none}.itemAmount{font-weight:950}.del{background:none;color:#64718a;font-size:15px;margin-left:7px}.empty{text-align:center;color:var(--muted);padding:25px 5px}
+.analysisRow{display:flex;justify-content:space-between;gap:10px;margin:10px 0}.analysisRow .name{min-width:0;flex:1;font-size:13px;font-weight:800}.analysisRow .amt{font-weight:900;font-size:13px}.tinybar{height:6px;background:#202a40;border-radius:99px;overflow:hidden;margin-top:5px}.tinybar i{display:block;height:100%;background:var(--red);border-radius:99px}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:10;background:#080c17e8;backdrop-filter:blur(20px);border-top:1px solid #1d2638;padding:8px 10px calc(8px + env(safe-area-inset-bottom))}.nav{width:min(760px,100%);margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.nav button{background:none;color:#758199;padding:7px 3px;font-size:10px;font-weight:850;border-radius:12px}.nav button.active{background:#18233a;color:#fff}.nav b{display:block;font-size:18px;margin-bottom:2px}
+.view{display:none}.view.active{display:block}.modal{position:fixed;inset:0;background:#0009;z-index:20;display:none;align-items:flex-end}.modal.open{display:flex}.sheet{width:min(760px,100%);margin:auto;background:#101728;border:1px solid #27334b;border-bottom:0;border-radius:25px 25px 0 0;padding:19px 16px calc(22px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}.sheetHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{background:#1c2639;color:#aeb8ca;border-radius:12px;padding:8px 11px}.note{font-size:11px;color:var(--muted);line-height:1.45;margin-top:8px}
+@media(max-width:430px){.cats{grid-template-columns:repeat(2,1fr)}.balance{font-size:35px}.heroGrid{gap:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="brand">HARCA <span>+</span> YATIRIM</div><div class="month" id="monthLabel"></div></div>
+
+<div id="home" class="view active">
+<section class="hero"><div class="kicker">BU AY ELDE KALAN</div><div class="balance" id="balance">₺0,00</div>
+<div class="heroGrid">
+<div class="mini"><div class="label">GELİR</div><div class="value green" id="incomeTotal">₺0</div></div>
+<div class="mini"><div class="label">HARCAMA</div><div class="value red" id="expenseTotal">₺0</div></div>
+<div class="mini"><div class="label">YATIRIM</div><div class="value blue" id="investTotal">₺0</div></div>
+<div class="mini"><div class="label">NET VARLIK</div><div class="value gold" id="assetTotal">₺0</div></div>
+</div></section>
+<div class="grid2">
+<section class="card"><div class="cardTitle">📊 Harcama oranı</div><div class="statBig" id="spendRate">%0</div><div class="progress"><div class="bar" id="spendBar" style="width:0;background:var(--red)"></div></div><div class="note">Gelirin ne kadarını bu ay harcadınız?</div></section>
+<section class="card"><div class="cardTitle">🎯 Yatırım oranı</div><div class="statBig blue" id="investRate">%0</div><div class="progress"><div class="bar" id="investBar" style="width:0;background:var(--blue)"></div></div><div class="note">Gelirin ne kadarı yatırıma gitti?</div></section>
+</div>
+<section class="card"><div class="cardTitle">⚡ Hızlı işlem</div><div class="row"><button class="btn btnGreen" onclick="openModal('income')">＋ Gelir</button><button class="btn btnGhost" onclick="openModal('expense')">− Harcama</button><button class="btn btnBlue" onclick="openModal('investment')">↗ Yatırım</button></div></section>
+<section class="card"><div class="cardTitle">🧾 Son hareketler <span class="sectionHint">Bu ay</span></div><div id="recentList" class="list"></div></section>
+</div>
+
+<div id="expenses" class="view"><section class="card"><div class="cardTitle">💸 Harcamalar <span class="sectionHint" id="expenseCount"></span></div><div class="list" id="expenseList"></div></section></div>
+
+<div id="investments" class="view">
+<section class="card"><div class="cardTitle">📈 Yatırımlar</div><div class="heroGrid">
+<div class="mini"><div class="label">BU AY</div><div class="value blue" id="invMonth">₺0</div></div>
+<div class="mini"><div class="label">TOPLAM</div><div class="value gold" id="invAll">₺0</div></div>
+</div><button class="btn btnBlue" onclick="openModal('investment')">＋ Yatırım Ekle</button></section>
+<section class="card"><div class="cardTitle">Varlıklar <span class="sectionHint">Kayıtlı yatırım değeri</span></div><div id="investmentList" class="list"></div></section>
+</div>
+
+<div id="analysis" class="view">
+<section class="card"><div class="cardTitle">🔎 Bu ay para nereye gidiyor?</div><div id="categoryAnalysis"></div></section>
+<section class="card"><div class="cardTitle">🧠 Finans özeti</div><div id="insights"></div></section>
+</div>
+</div>
+
+<div class="bottom"><div class="nav">
+<button class="active" data-view="home" onclick="showView('home')"><b>⌂</b>Özet</button>
+<button data-view="expenses" onclick="showView('expenses')"><b>−</b>Harcamalar</button>
+<button data-view="investments" onclick="showView('investments')"><b>↗</b>Yatırımlar</button>
+<button data-view="analysis" onclick="showView('analysis')"><b>◔</b>Analiz</button>
+</div></div>
+
+<div class="modal" id="modal"><div class="sheet"><div class="sheetHead"><strong id="modalTitle" style="font-size:19px"></strong><button class="close" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
+
+<script>
+const KEY='harcaYatirimV2';
+const categories=[['Market','🛒'],['Yemek & İçecek','🍔'],['Kafe / Kantin','☕'],['Yakıt','⛽'],['Ulaşım','🚌'],['Kira / Ev','🏠'],['Faturalar','💡'],['Telefon / İnternet','📱'],['Giyim','👕'],['Hediye','🎁'],['Eğlence','🎮'],['Abonelikler','🎬'],['Hastane / Sağlık','🏥'],['Eczane / İlaç','💊'],['Evcil Hayvan / Akvaryum','🐠'],['Tamir / Bakım','🔧'],['Tatil / Seyahat','✈️'],['Borç / Kredi','💳'],['Resmi Ödeme','🧾'],['Eğitim','📚'],['Çocuk','👶'],['Diğer','📦']];
+const invTypes=[['Altın','🪙'],['Hisse','📈'],['Fon','🏦'],['Döviz','💵'],['Kripto','₿'],['Diğer','📦']];
+let state;
+try{state=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){state=null}
+if(!state||typeof state!=='object')state={incomes:[],expenses:[],investments:[]};
+state.incomes=Array.isArray(state.incomes)?state.incomes:[];state.expenses=Array.isArray(state.expenses)?state.expenses:[];state.investments=Array.isArray(state.investments)?state.investments:[];
+let selectedCat='Market',selectedType='Altın';
+
+const money=n=>new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:2}).format(Number(n)||0);
+const today=()=>new Date().toISOString().slice(0,10),monthKey=d=>String(d||'').slice(0,7),currentMonth=()=>today().slice(0,7);
+const monthName=k=>{const [y,m]=k.split('-');return new Date(+y,+m-1,1).toLocaleDateString('tr-TR',{month:'long',year:'numeric'})};
+function persist(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function showView(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===id));render();scrollTo({top:0,behavior:'smooth'})}
+function typeLabel(t){return t==='required'?'🟢 Zorunlu':t==='optional'?'🟡 İsteğe bağlı':'⚪ Belirsiz'}
+function autoType(cat){return /Market|Faturalar|Kira \/ Ev|Telefon \/ İnternet|Hastane \/ Sağlık|Eczane \/ İlaç|Ulaşım|Yakıt|Resmi Ödeme/.test(cat)?'required':/Hediye|Eğlence|Giyim|Abonelikler|Tatil \/ Seyahat|Kafe \/ Kantin/.test(cat)?'optional':'uncertain'}
+function openModal(mode){
+const body=document.getElementById('modalBody'),title=document.getElementById('modalTitle');
+if(mode==='income'){title.textContent='💰 Gelir Ekle';body.innerHTML=`<div class="row"><input id="mAmount" type="number" inputmode="decimal" placeholder="Tutar (TL)"><input id="mDate" type="date" value="${today()}"></div><input id="mDesc" style="margin-top:9px" placeholder="Maaş, mesai, prim, ek gelir..."><button class="btn btnGreen" onclick="saveIncome()">GELİRİ KAYDET</button>`}
+else if(mode==='expense'){title.textContent='💸 Harcama Ekle';body.innerHTML=`<div class="row"><input id="mAmount" type="number" inputmode="decimal" placeholder="Tutar (TL)"><input id="mDate" type="date" value="${today()}"></div><input id="mDesc" style="margin-top:9px" placeholder="Açıklama (isteğe bağlı)"><div class="label" style="margin-top:13px">KATEGORİ</div><div class="cats">${categories.map(([n,e])=>`<button type="button" class="cat ${n===selectedCat?'active':''}" data-cat="${n.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${e} ${n}</button>`).join('')}</div><div class="label" style="margin-top:13px">DEĞERLENDİRME</div><select id="mType"><option value="auto">Sistem değerlendirsin</option><option value="required">🟢 Zorunlu</option><option value="optional">🟡 İsteğe bağlı</option><option value="uncertain">⚪ Belirsiz</option></select><button class="btn btnGhost" onclick="saveExpense()">HARCAMAYI KAYDET</button>`}
+else{title.textContent='📈 Yatırım Ekle';body.innerHTML=`<div class="row"><input id="mAmount" type="number" inputmode="decimal" placeholder="Yatırılan tutar (TL)"><input id="mDate" type="date" value="${today()}"></div><div class="label" style="margin-top:13px">YATIRIM TÜRÜ</div><div class="cats">${invTypes.map(([n,e])=>`<button type="button" class="cat ${n===selectedType?'active':''}" data-inv="${n.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${e} ${n}</button>`).join('')}</div><input id="mValue" type="number" inputmode="decimal" style="margin-top:9px" placeholder="Güncel değer (opsiyonel)"><input id="mDesc" style="margin-top:9px" placeholder="Not (ör. 1 gram altın)"><button class="btn btnBlue" onclick="saveInvestment()">YATIRIMI KAYDET</button><div class="note">Güncel değer girmezsen yatırım tutarı varlık değeri olarak kullanılır.</div>`}
+document.getElementById('modal').classList.add('open')
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function saveIncome(){
+ const amount=Number(document.getElementById('mAmount').value);
+ if(!(amount>0))return alert('Geçerli bir gelir tutarı gir.');
+ state.incomes.unshift({id:Date.now(),amount:amount,date:document.getElementById('mDate').value||today(),desc:document.getElementById('mDesc').value.trim()||'Gelir'});
+ closeModal(); persist();
+}
+function saveExpense(){
+ const amount=Number(document.getElementById('mAmount').value);
+ if(!(amount>0))return alert('Geçerli bir harcama tutarı gir.');
+ const t=document.getElementById('mType').value;
+ state.expenses.unshift({id:Date.now(),amount:amount,date:document.getElementById('mDate').value||today(),desc:document.getElementById('mDesc').value.trim(),cat:selectedCat,type:t==='auto'?autoType(selectedCat):t});
+ closeModal(); persist();
+}
+function saveInvestment(){
+ const amount=Number(document.getElementById('mAmount').value);
+ if(!(amount>0))return alert('Geçerli bir yatırım tutarı gir.');
+ const value=Number(document.getElementById('mValue').value)||amount;
+ state.investments.unshift({id:Date.now(),amount:amount,value:value,date:document.getElementById('mDate').value||today(),type:selectedType,desc:document.getElementById('mDesc').value.trim()});
+ closeModal(); persist();
+}
+function del(kind,id){if(!confirm('Bu kaydı silmek istediğine emin misin?'))return;state[kind]=state[kind].filter(x=>x.id!==id);persist()}
+function esc(s){return String(s==null?'':s).replace(/[&<>\"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m]})}
+function render(){
+const mk=currentMonth(),inc=state.incomes.filter(x=>monthKey(x.date)===mk),exp=state.expenses.filter(x=>monthKey(x.date)===mk),inv=state.investments.filter(x=>monthKey(x.date)===mk);
+const income=inc.reduce((s,x)=>s+Number(x.amount),0),expense=exp.reduce((s,x)=>s+Number(x.amount),0),invest=inv.reduce((s,x)=>s+Number(x.amount),0),assets=state.investments.reduce((s,x)=>s+Number(x.value||x.amount),0),balance=income-expense-invest;
+document.getElementById('monthLabel').textContent=monthName(mk);
+document.getElementById('incomeTotal').textContent=money(income);
+document.getElementById('expenseTotal').textContent=money(expense);
+document.getElementById('investTotal').textContent=money(invest);
+document.getElementById('assetTotal').textContent=money(assets);
+document.getElementById('balance').textContent=money(balance);
+const sr=income?expense/income*100:0,ir=income?invest/income*100:0;
+document.getElementById('spendRate').textContent='%'+Math.round(sr);
+document.getElementById('investRate').textContent='%'+Math.round(ir);
+document.getElementById('spendBar').style.width=Math.min(100,sr)+'%';
+document.getElementById('investBar').style.width=Math.min(100,ir)+'%';
+document.getElementById('expenseCount').textContent=exp.length+' işlem';
+document.getElementById('expenseList').innerHTML=exp.length?exp.map(x=>itemHTML(x,'expenses')).join(''):'<div class="empty">Bu ay henüz harcama yok.</div>';
+document.getElementById('investmentList').innerHTML=state.investments.length?state.investments.map(x=>itemHTML(x,'investments')).join(''):'<div class="empty">Henüz yatırım kaydı yok.</div>';
+document.getElementById('invMonth').textContent=money(invest);
+document.getElementById('invAll').textContent=money(state.investments.reduce((s,x)=>s+Number(x.amount),0));
+const recent=[...inc.map(x=>({...x,_kind:'incomes'})),...exp.map(x=>({...x,_kind:'expenses'})),...inv.map(x=>({...x,_kind:'investments'}))]
+ .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0)||Number(b.id)-Number(a.id)).slice(0,8);
+document.getElementById('recentList').innerHTML=recent.length?recent.map(x=>itemHTML(x,x._kind)).join(''):'<div class="empty">Henüz kayıt yok. İlk işlemi ekle 👇</div>';
+renderAnalysis(exp,income,invest)
+}
+function renderAnalysis(exp,income,invest){
+const totals={};exp.forEach(x=>totals[x.cat]=(totals[x.cat]||0)+Number(x.amount));const rows=Object.entries(totals).sort((a,b)=>b[1]-a[1]),max=rows[0]?.[1]||1;
+document.getElementById('categoryAnalysis').innerHTML=rows.length?rows.map(([n,v])=>`<div class="analysisRow"><div class="name">${(categories.find(c=>c[0]===n)||['','📦'])[1]} ${esc(n)}<div class="tinybar"><i style="width:${v/max*100}%"></i></div></div><div class="amt">${money(v)}</div></div>`).join(''):'<div class="empty">Analiz için bu ay birkaç harcama ekle.</div>';
+const small=exp.filter(x=>Number(x.amount)<=100).reduce((s,x)=>s+Number(x.amount),0),opt=exp.filter(x=>x.type==='optional').reduce((s,x)=>s+Number(x.amount),0),req=exp.filter(x=>x.type==='required').reduce((s,x)=>s+Number(x.amount),0);let msgs=[];
+if(income===0)msgs.push('💡 Önce gelirlerini ekleyince oranlar ve kalan para daha anlamlı görünecek.');else{if(invest>0)msgs.push(`📈 Bu ay gelirin ${Math.round(invest/income*100)}%'ini yatırıma ayırdın.`);if(small>0)msgs.push(`☕ 100 TL ve altındaki küçük harcamalar toplamı ${money(small)}.`);if(opt>req)msgs.push(`🟡 İsteğe bağlı harcamalar zorunlu harcamalardan yüksek: ${money(opt)}.`);else msgs.push(`🟢 Zorunlu harcamalar: ${money(req)}.`)}
+document.getElementById('insights').innerHTML=msgs.map(x=>`<div class="analysisRow"><div class="name">${x}</div></div>`).join('')||'<div class="empty">Henüz yeterli veri yok.</div>'
+}
+document.getElementById('modal').addEventListener('click',e=>{
+ if(e.target.id==='modal'){closeModal();return}
+ const cat=e.target.closest('#modalBody .cat[data-cat]');
+ const inv=e.target.closest('#modalBody .cat[data-inv]');
+ if(cat){
+   selectedCat=cat.dataset.cat;
+   cat.parentElement.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));
+   cat.classList.add('active');
+ }
+ if(inv){
+   selectedType=inv.dataset.inv;
+   inv.parentElement.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));
+   inv.classList.add('active');
+ }
+});
+render();
+</script>
+</body>
+</html>
