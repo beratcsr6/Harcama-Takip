@@ -1,0 +1,11 @@
+{
+  "name": "Harca + Yatırım",
+  "short_name": "Harca + Yatırım",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090d18",
+  "theme_color": "#0b1020",
+  "lang": "tr",
+  "dir": "ltr"
+}

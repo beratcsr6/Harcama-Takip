@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="manifest.json">
+<title>Harca + Yatırım</title>
+<style>
+:root{--bg:#090d18;--card:#111827;--line:#27334a;--text:#f5f7fb;--muted:#8d99ae;--green:#35d07f;--red:#ff6075;--blue:#7190ff;--gold:#f2c85b}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#18233d,#090d18 42%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:720px;margin:auto;padding:calc(18px + env(safe-area-inset-top)) 15px calc(100px + env(safe-area-inset-bottom))}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.brand{font-size:25px;font-weight:950}.brand span{color:var(--blue)}.month{font-size:12px;font-weight:850;color:var(--muted);border:1px solid var(--line);padding:9px 11px;border-radius:13px}
+.card{background:#111827f5;border:1px solid var(--line);border-radius:21px;padding:16px;margin-bottom:11px}.hero{background:linear-gradient(145deg,#1c2b49,#111827 70%);border-color:#354564}.kicker{font-size:11px;color:#aeb9cb;font-weight:900;letter-spacing:1px}.balance{font-size:38px;font-weight:950;margin:5px 0 17px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.mini{background:#0a101ccc;border:1px solid #29364d;border-radius:15px;padding:12px}.label{font-size:10px;color:var(--muted);font-weight:900}.value{font-size:18px;font-weight:950;margin-top:4px}.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}.gold{color:var(--gold)}
+.title{font-size:16px;font-weight:950;margin-bottom:12px;display:flex;justify-content:space-between}.hint{font-size:10px;color:var(--muted)}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}input,select{width:100%;background:#0b111d;color:var(--text);border:1px solid #2b3850;border-radius:13px;padding:12px;outline:0}input[type=date]{color-scheme:dark;text-align:center;text-align-last:center}
+button{font:inherit}.btn{width:100%;border:0;border-radius:13px;padding:12px;font-weight:950;margin-top:8px;cursor:pointer}.incomeBtn{background:var(--green);color:#06140d}.expenseBtn{background:#273249;color:#fff}.investBtn{background:var(--blue);color:#070c18}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.cat{min-height:44px;border:1px solid #29364b;background:#172031;color:#d8deea;border-radius:12px;font-size:11px;font-weight:850;cursor:pointer}.cat.active{background:#2c3b5b;border-color:#8496c0;color:#fff}
+.list{display:flex;flex-direction:column}.item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #222c3d}.item:last-child{border:0}.main{min-width:0}.name{font-size:13px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:10px;color:var(--muted);margin-top:4px}.right{text-align:right}.amt{font-weight:950}.delete{border:0;background:transparent;color:#718097;margin-left:5px;cursor:pointer}.empty{text-align:center;color:var(--muted);padding:24px 5px;font-size:12px}.bar{height:7px;background:#263146;border-radius:9px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;border-radius:9px}
+.view{display:none}.view.active{display:block}.bottom{position:fixed;left:0;right:0;bottom:0;background:#090d18ee;backdrop-filter:blur(18px);border-top:1px solid #202a3c;padding:7px 10px calc(7px + env(safe-area-inset-bottom));z-index:5}.nav{max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.nav button{background:none;border:0;color:#758198;border-radius:12px;padding:7px;font-size:10px;font-weight:850}.nav button.active{background:#1c2941;color:#fff}.nav b{display:block;font-size:18px}
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;z-index:20}.modal.open{display:flex}.sheet{width:min(720px,100%);margin:auto;background:#111827;border:1px solid #2c3950;border-bottom:0;border-radius:24px 24px 0 0;padding:17px 15px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}.sheetHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.close{border:0;background:#222d40;color:#bdc7d6;border-radius:11px;padding:8px 10px;cursor:pointer}.note{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.45}
+.danger{background:#321d26;color:#ff9aaa;border:1px solid #66303e}
+@media(max-width:430px){.cats{grid-template-columns:repeat(2,1fr)}.balance{font-size:34px}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="brand">HARCA <span>+</span> YATIRIM</div><div class="month" id="monthLabel"></div></div>
+
+<section id="home" class="view active">
+<div class="card hero"><div class="kicker">BU AY ELDE KALAN</div><div class="balance" id="balance">₺0,00</div><div class="grid">
+<div class="mini"><div class="label">GELİR</div><div class="value green" id="incomeTotal">₺0</div></div>
+<div class="mini"><div class="label">HARCAMA</div><div class="value red" id="expenseTotal">₺0</div></div>
+<div class="mini"><div class="label">YATIRIM</div><div class="value blue" id="investTotal">₺0</div></div>
+<div class="mini"><div class="label">VARLIK DEĞERİ</div><div class="value gold" id="assetTotal">₺0</div></div>
+</div></div>
+<div class="grid"><div class="card"><div class="title">📊 Harcama</div><div class="value red" id="spendRate">%0</div><div class="bar"><i id="spendBar"></i></div></div><div class="card"><div class="title">📈 Yatırım</div><div class="value blue" id="investRate">%0</div><div class="bar"><i id="investBar"></i></div></div></div>
+<div class="card"><div class="title">⚡ Hızlı işlem</div><div class="row"><button class="btn incomeBtn" data-open="income">＋ Gelir</button><button class="btn expenseBtn" data-open="expense">− Harcama</button><button class="btn investBtn" data-open="investment">↗ Yatırım</button></div></div>
+<div class="card"><div class="title">🧾 Son hareketler <span class="hint">Bu ay</span></div><div id="recentList" class="list"></div></div>
+</section>
+
+<section id="expenses" class="view"><div class="card"><div class="title">💸 Harcamalar <span class="hint" id="expenseCount"></span></div><div id="expenseList" class="list"></div></div></section>
+<section id="investments" class="view"><div class="card"><div class="title">📈 Yatırımlar</div><div class="grid"><div class="mini"><div class="label">BU AY</div><div class="value blue" id="invMonth">₺0</div></div><div class="mini"><div class="label">TOPLAM YATIRILAN</div><div class="value gold" id="invAll">₺0</div></div></div><button class="btn investBtn" data-open="investment">＋ Yatırım Ekle</button></div><div class="card"><div class="title">Varlık kayıtları</div><div id="investmentList" class="list"></div></div></section>
+<section id="analysis" class="view"><div class="card"><div class="title">🔎 Para nereye gidiyor?</div><div id="categoryAnalysis"></div></div><div class="card"><div class="title">🧠 Finans özeti</div><div id="insights"></div></div><div class="card"><div class="title">⚙️ Veri</div><button class="btn danger" data-clear="all">🗑️ TÜM KAYITLARI TEMİZLE</button><div class="note">Bu işlem gelir, harcama ve yatırım kayıtlarının tamamını bu cihazdan siler.</div></div></section>
+</div>
+
+<div class="bottom"><div class="nav"><button class="active" data-view="home"><b>⌂</b>Özet</button><button data-view="expenses"><b>−</b>Harcamalar</button><button data-view="investments"><b>↗</b>Yatırımlar</button><button data-view="analysis"><b>◔</b>Analiz</button></div></div>
+<div class="modal" id="modal"><div class="sheet"><div class="sheetHead"><strong id="modalTitle"></strong><button class="close" id="closeModal">✕</button></div><div id="modalBody"></div></div></div>
+
+<script>
+'use strict';
+(function(){
+const STORE='harca_yatirim_v4',OLD='ortak_harcama_v1';
+const categories=[['Market','🛒'],['Yemek & İçecek','🍔'],['Kafe / Kantin','☕'],['Yakıt','⛽'],['Ulaşım','🚌'],['Kira / Ev','🏠'],['Faturalar','💡'],['Telefon / İnternet','📱'],['Giyim','👕'],['Hediye','🎁'],['Eğlence','🎮'],['Abonelikler','🎬'],['Hastane / Sağlık','🏥'],['Eczane / İlaç','💊'],['Evcil Hayvan / Akvaryum','🐠'],['Tamir / Bakım','🔧'],['Tatil / Seyahat','✈️'],['Borç / Kredi','💳'],['Resmi Ödeme','🧾'],['Eğitim','📚'],['Çocuk','👶'],['Diğer','📦']];
+const invTypes=[['Altın','🪙'],['Hisse','📈'],['Fon','🏦'],['Döviz','💵'],['Kripto','₿'],['Diğer','📦']];
+let state={incomes:[],expenses:[],investments:[]},selectedCat='Market',selectedInv='Altın';
+
+function el(id){return document.getElementById(id)}
+function today(){return new Date().toISOString().slice(0,10)}
+function monthKey(d){return String(d||'').slice(0,7)}
+function money(n){return new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:2}).format(Number(n)||0)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function autoType(c){
+ const req=['Market','Faturalar','Kira / Ev','Telefon / İnternet','Hastane / Sağlık','Eczane / İlaç','Ulaşım','Yakıt','Resmi Ödeme'];
+ const opt=['Hediye','Eğlence','Giyim','Abonelikler','Tatil / Seyahat','Kafe / Kantin'];
+ return req.indexOf(c)>=0?'required':opt.indexOf(c)>=0?'optional':'uncertain'
+}
+function load(){
+ try{
+  let raw=localStorage.getItem(STORE);
+  if(!raw)raw=localStorage.getItem(OLD);
+  if(raw){const x=JSON.parse(raw);state={incomes:Array.isArray(x.incomes)?x.incomes:[],expenses:Array.isArray(x.expenses)?x.expenses:[],investments:Array.isArray(x.investments)?x.investments:[]}}
+ }catch(e){state={incomes:[],expenses:[],investments:[]}}
+}
+function persist(){
+ try{localStorage.setItem(STORE,JSON.stringify(state));return true}catch(e){alert('Tarayıcı bu cihazda kayıt alanını engelliyor.');return false}
+}
+function render(){
+ const m=today().slice(0,7),inc=state.incomes.filter(x=>monthKey(x.date)===m),exp=state.expenses.filter(x=>monthKey(x.date)===m),inv=state.investments.filter(x=>monthKey(x.date)===m);
+ const income=inc.reduce((a,x)=>a+Number(x.amount||0),0),expense=exp.reduce((a,x)=>a+Number(x.amount||0),0),invest=inv.reduce((a,x)=>a+Number(x.amount||0),0),assets=state.investments.reduce((a,x)=>a+Number(x.value||x.amount||0),0);
+ el('monthLabel').textContent=new Date().toLocaleDateString('tr-TR',{month:'long',year:'numeric'});
+ el('balance').textContent=money(income-expense-invest);el('incomeTotal').textContent=money(income);el('expenseTotal').textContent=money(expense);el('investTotal').textContent=money(invest);el('assetTotal').textContent=money(assets);
+ const sr=income?expense/income*100:0,ir=income?invest/income*100:0;el('spendRate').textContent='%'+Math.round(sr);el('investRate').textContent='%'+Math.round(ir);el('spendBar').style.width=Math.min(100,sr)+'%';el('spendBar').style.background='var(--red)';el('investBar').style.width=Math.min(100,ir)+'%';el('investBar').style.background='var(--blue)';
+ el('expenseCount').textContent=exp.length+' işlem';el('expenseList').innerHTML=exp.length?exp.map(x=>item(x,'expenses')).join(''):'<div class="empty">Bu ay harcama yok.</div>';
+ el('investmentList').innerHTML=state.investments.length?state.investments.map(x=>item(x,'investments')).join(''):'<div class="empty">Henüz yatırım yok.</div>';
+ el('invMonth').textContent=money(invest);el('invAll').textContent=money(state.investments.reduce((a,x)=>a+Number(x.amount||0),0));
+ const recent=[...inc.map(x=>({...x,k:'incomes'})),...exp.map(x=>({...x,k:'expenses'})),...inv.map(x=>({...x,k:'investments'}))].sort((a,b)=>Number(b.id)-Number(a.id)).slice(0,10);
+ el('recentList').innerHTML=recent.length?recent.map(x=>item(x,x.k)).join(''):'<div class="empty">Henüz kayıt yok. İlk işlemi ekle 👇</div>';
+ const totals={};exp.forEach(x=>totals[x.cat]=(totals[x.cat]||0)+Number(x.amount||0));const rows=Object.entries(totals).sort((a,b)=>b[1]-a[1]),max=rows.length?rows[0][1]:1;
+ el('categoryAnalysis').innerHTML=rows.length?rows.map(r=>'<div class="item"><div class="main"><div class="name">'+((categories.find(c=>c[0]===r[0])||['','📦'])[1])+' '+esc(r[0])+'</div><div class="bar"><i style="width:'+(r[1]/max*100)+'%;background:var(--red)"></i></div></div><div class="amt">'+money(r[1])+'</div></div>').join(''):'<div class="empty">Analiz için harcama ekle.</div>';
+ const small=exp.filter(x=>Number(x.amount)<=100).reduce((a,x)=>a+Number(x.amount),0),opt=exp.filter(x=>x.type==='optional').reduce((a,x)=>a+Number(x.amount),0),req=exp.filter(x=>x.type==='required').reduce((a,x)=>a+Number(x.amount),0);
+ let msg=income?'🟢 Zorunlu: '+money(req)+' • 🟡 İsteğe bağlı: '+money(opt):'💡 Gelir ekleyince finans özeti oluşacak.';
+ if(small)msg+=' • ☕ 100 TL ve altı: '+money(small);
+ el('insights').innerHTML='<div class="item"><div class="name">'+msg+'</div></div>';
+}
+function item(x,k){
+ const exp=k==='expenses',inv=k==='investments', icon=exp?(categories.find(c=>c[0]===x.cat)||['','📦'])[1]:inv?(invTypes.find(c=>c[0]===x.type)||['','📦'])[1]:'💰';
+ const name=exp?(x.desc||x.cat):inv?(x.desc||x.type):(x.desc||'Gelir'),sub=exp?x.cat+' • '+(x.type==='required'?'🟢 Zorunlu':x.type==='optional'?'🟡 İsteğe bağlı':'⚪ Belirsiz'):inv?x.type+' • '+x.date:x.date,cls=exp?'red':inv?'blue':'green',sign=exp?'-':'+';
+ return '<div class="item"><div class="main"><div class="name">'+icon+' '+esc(name)+'</div><div class="sub">'+esc(sub)+'</div></div><div class="right"><div class="amt '+cls+'">'+sign+money(x.amount)+' <button class="delete" data-delete="'+k+'" data-id="'+x.id+'">✕</button></div></div></div>'
+}
+function openModal(mode){
+ el('modalTitle').textContent=mode==='income'?'💰 Gelir Ekle':mode==='expense'?'💸 Harcama Ekle':'📈 Yatırım Ekle';
+ let s='<div class="row"><input id="mAmount" type="number" inputmode="decimal" placeholder="Tutar (TL)"><input id="mDate" type="date" value="'+today()+'"></div>';
+ if(mode==='income')s+='<input id="mDesc" style="margin-top:8px" placeholder="Maaş, mesai, prim, ek gelir..."><button class="btn incomeBtn" id="saveIncome">GELİRİ KAYDET</button>';
+ if(mode==='expense')s+='<input id="mDesc" style="margin-top:8px" placeholder="Açıklama (isteğe bağlı)"><div class="label" style="margin:13px 0 7px">KATEGORİ</div><div class="cats">'+categories.map(c=>'<button type="button" class="cat '+(c[0]===selectedCat?'active':'')+'" data-cat="'+esc(c[0])+'">'+c[1]+' '+c[0]+'</button>').join('')+'</div><div class="label" style="margin:13px 0 7px">DEĞERLENDİRME</div><select id="mType"><option value="auto">Sistem değerlendirsin</option><option value="required">🟢 Zorunlu</option><option value="optional">🟡 İsteğe bağlı</option><option value="uncertain">⚪ Belirsiz</option></select><button class="btn expenseBtn" id="saveExpense">HARCAMAYI KAYDET</button>';
+ if(mode==='investment')s+='<div class="label" style="margin:13px 0 7px">YATIRIM TÜRÜ</div><div class="cats">'+invTypes.map(c=>'<button type="button" class="cat '+(c[0]===selectedInv?'active':'')+'" data-inv="'+esc(c[0])+'">'+c[1]+' '+c[0]+'</button>').join('')+'</div><input id="mValue" type="number" inputmode="decimal" style="margin-top:8px" placeholder="Güncel değer (opsiyonel)"><input id="mDesc" style="margin-top:8px" placeholder="Not"><button class="btn investBtn" id="saveInvestment">YATIRIMI KAYDET</button>';
+ el('modalBody').innerHTML=s;el('modal').classList.add('open')
+}
+function closeModal(){el('modal').classList.remove('open')}
+
+document.addEventListener('click',function(e){
+ const open=e.target.closest('[data-open]');if(open){openModal(open.dataset.open);return}
+ const view=e.target.closest('[data-view]');if(view){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));el(view.dataset.view).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b===view));render();return}
+ const cat=e.target.closest('[data-cat]');if(cat){selectedCat=cat.dataset.cat;cat.parentElement.querySelectorAll('.cat').forEach(b=>b.classList.remove('active'));cat.classList.add('active');return}
+ const iv=e.target.closest('[data-inv]');if(iv){selectedInv=iv.dataset.inv;iv.parentElement.querySelectorAll('.cat').forEach(b=>b.classList.remove('active'));iv.classList.add('active');return}
+ const d=e.target.closest('[data-delete]');if(d){if(confirm('Bu kaydı silmek istediğine emin misin?')){state[d.dataset.delete]=state[d.dataset.delete].filter(x=>String(x.id)!==String(d.dataset.id));persist();render()}return}
+ if(e.target.id==='saveIncome'){saveIncome();return}if(e.target.id==='saveExpense'){saveExpense();return}if(e.target.id==='saveInvestment'){saveInvestment();return}
+ if(e.target.id==='closeModal'||e.target.id==='modal')closeModal();
+ if(e.target.closest('[data-clear="all"]')){if(confirm('TÜM gelir, harcama ve yatırım kayıtları silinsin mi?')){state={incomes:[],expenses:[],investments:[]};persist();render();alert('Tüm kayıtlar temizlendi.')}return}
+});
+function saveIncome(){const a=Number(el('mAmount').value);if(!(a>0))return alert('Geçerli bir tutar gir.');state.incomes.unshift({id:Date.now()+Math.random(),amount:a,date:el('mDate').value||today(),desc:el('mDesc').value.trim()||'Gelir'});if(persist()){closeModal();render()}}
+function saveExpense(){const a=Number(el('mAmount').value);if(!(a>0))return alert('Geçerli bir tutar gir.');const t=el('mType').value;state.expenses.unshift({id:Date.now()+Math.random(),amount:a,date:el('mDate').value||today(),desc:el('mDesc').value.trim(),cat:selectedCat,type:t==='auto'?autoType(selectedCat):t});if(persist()){closeModal();render()}}
+function saveInvestment(){const a=Number(el('mAmount').value);if(!(a>0))return alert('Geçerli bir tutar gir.');const v=Number(el('mValue').value)||a;state.investments.unshift({id:Date.now()+Math.random(),amount:a,value:v,date:el('mDate').value||today(),type:selectedInv,desc:el('mDesc').value.trim()});if(persist()){closeModal();render()}}
+load();render();
+})();
+</script>
+</body>
+</html>
